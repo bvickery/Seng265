@@ -51,11 +51,15 @@ void StringList_Destroy(StringList* L){
 */ 
 int StringList_Size(StringList* L){
 	int size = 0;
+	if(L->head == NULL){
+		return size;
+	}
 	StringListNode* temp = L->head;
-	do{
+	size++;
+	while(temp->next != NULL){
 		size++;
 		temp = temp->next;
-	}while(temp->next != L->head);
+	}
 	return size;
 }
 
@@ -78,17 +82,19 @@ int StringList_Size(StringList* L){
 */ 
 StringListNode* StringList_AddFront(StringList* L, char* str){
 	StringListNode* new_node = (StringListNode*)malloc(sizeof(StringListNode));
+	new_node->element = (char*)malloc(strlen(str));
 	strcpy(new_node->element, str);
-	new_node->next = L->head;
+	
 	new_node->previous = NULL;
 	if(L->head == NULL){
 		L->tail = new_node;
+		new_node->next = NULL;
 	}else{
 		L->head->previous = new_node;
+		new_node->next = L->head;
 	}
 	L->head = new_node;
 
-	
 	return new_node;
 }
 
@@ -111,13 +117,15 @@ StringListNode* StringList_AddFront(StringList* L, char* str){
 */ 
 StringListNode* StringList_AddBack(StringList* L, char* str){
 	StringListNode* new_node = (StringListNode*)malloc(sizeof(StringListNode));
+	new_node->element = (char*)malloc(strlen(str));
 	strcpy(new_node->element, str);
 	new_node->next = NULL;
-	new_node->previous = L->tail;
 	if(L->tail == NULL){
 		L->head = new_node;
+		new_node->previous = NULL;
 	}else{
 		L->tail->next = new_node;
+		new_node->previous = L->tail;
 	}
 	L->tail = new_node;
 	return new_node;

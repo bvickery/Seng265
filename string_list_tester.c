@@ -39,18 +39,36 @@ int test1(){
 	StringList list;
 	StringList_Init(&list);
 	if(list.head != NULL){
-		printf("failed to intialize head to NULL");
+		printf("failed to intialize head to NULL.");
 		return TEST_FAILED;
 	}
 	if(list.tail != NULL){
-		printf("failed to intialize tail to NULL");
+		printf("failed to intialize tail to NULL.");
 		return TEST_FAILED;
 	}
 	int size = StringList_Size(&list);
 	if(size != 0){
-		printf("Incorrectly gave back the size of an empty list");
+		printf("Incorrectly gave back the size of an empty list.");
 		return TEST_FAILED;
 	}
+	char *str = "this was the first element inserted into an empty list";
+	StringList_AddFront(&list,str);
+	size = StringList_Size(&list);
+	if(size != 1){
+		printf("did not add a new node to the front of an empty list.");
+		return TEST_FAILED;
+	}
+	StringListNode* temp = list.head;
+	if(temp->element == NULL){
+		printf("did not put the string into the new node(new_node->element = NULL)");
+		return TEST_FAILED;
+	}
+	if(strstr(temp->element,str) == NULL){
+		printf("did not properly copy the string into the new node, you copied in: %s\n",temp->element);
+		printf("the correct output is: %s\n",str);
+		return TEST_FAILED;
+	}
+	
 	return TEST_PASSED;
 }
 
