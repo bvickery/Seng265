@@ -36,6 +36,7 @@ int test1(){
 	//(Note that since you cannot use StringList_Destroy, this function
 	// will produce a memory leak. However, this is acceptable in a testing
 	// context).
+	
 	StringList list;
 	StringList_Init(&list);
 	if(list.head != NULL){
@@ -46,21 +47,34 @@ int test1(){
 		printf("failed to intialize tail to NULL.");
 		return TEST_FAILED;
 	}
+	
 	int size = StringList_Size(&list);
 	if(size != 0){
-		printf("Incorrectly gave back the size of an empty list.");
+		printf("Incorrectly gave back the size of an empty list, returned: %d", size);
 		return TEST_FAILED;
 	}
+	
 	char *str = "this was the first element inserted into an empty list";
 	StringList_AddFront(&list,str);
-	size = StringList_Size(&list);
-	if(size != 1){
-		printf("did not add a new node to the front of an empty list.");
+	
+	if(list.head == NULL){
+		printf("did not add a new node to the front of an empty list correctly, head = NULL");
 		return TEST_FAILED;
 	}
+	if(list.tail == NULL){
+		printf("did not add a new node to the front of an empty list correctly, tail = NULL");
+		return TEST_FAILED;
+	}
+	
+	size = StringList_Size(&list);
+	if(size != 1){
+		printf("did not properly return the size of a 1 element list, returned: %d", size);
+		return TEST_FAILED;
+	}
+	
 	StringListNode* temp = list.head;
 	if(temp->element == NULL){
-		printf("did not put the string into the new node(new_node->element = NULL)");
+		printf("did not put the string into the new node(new_node->element = NULL).");
 		return TEST_FAILED;
 	}
 	if(strstr(temp->element,str) == NULL){
@@ -69,6 +83,23 @@ int test1(){
 		return TEST_FAILED;
 	}
 	
+	//check if tail is pointing to the first node as well
+	temp = list.tail;
+	if(strstr(temp->element,str) == NULL){
+		printf("failed to set the tail to the first element in a list containing 1 node.");
+		return TEST_FAILED;
+	}
+	// add more items to the list and do some more checks, check if tail is pointing to correct item
+	char *str2 = "this was the second element inserted into the list";
+	StringList_AddFront(&list,str2);
+	temp = list.tail;
+	if(strstr(temp->element,str) == NULL){
+		printf("The tail was changed when adding a second element to the front of the list, it was changed to:\n%s\n",temp->element);
+		printf("It should have been: %s",str);
+		return TEST_FAILED;
+	}
+	//need to make more cases for the second item added
+	//then need to add a bunch more nodes into the list hopefully somehow with a forloop not sure how to do the string inside the for loop though possible + works as in java?
 	return TEST_PASSED;
 }
 
