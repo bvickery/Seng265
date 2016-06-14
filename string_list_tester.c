@@ -28,7 +28,7 @@
 /* Each of the test functions below should return TEST_FAILED if the test fails
    and TEST_PASSED if the test is passed.
 */
-
+//need to ask bill if it should exit the test once a single things has been failed or if it should try to continue onto the others.
 int test1(){
 	//First test case: Basic functionality I
 	//Test only the StringList_Init, StringList_Size,
@@ -40,17 +40,17 @@ int test1(){
 	StringList list;
 	StringList_Init(&list);
 	if(list.head != NULL){
-		printf("failed to intialize head to NULL.");
+		printf("failed to intialize head to NULL.\n");
 		return TEST_FAILED;
 	}
 	if(list.tail != NULL){
-		printf("failed to intialize tail to NULL.");
+		printf("failed to intialize tail to NULL.\n");
 		return TEST_FAILED;
 	}
 	
 	int size = StringList_Size(&list);
 	if(size != 0){
-		printf("Incorrectly gave back the size of an empty list, returned: %d", size);
+		printf("Incorrectly gave back the size of an empty list, returned: %d\n", size);
 		return TEST_FAILED;
 	}
 	
@@ -58,23 +58,23 @@ int test1(){
 	StringList_AddFront(&list,str);
 	
 	if(list.head == NULL){
-		printf("did not add a new node to the front of an empty list correctly, head = NULL");
+		printf("did not add a new node to the front of an empty list correctly, head = NULL\n");
 		return TEST_FAILED;
 	}
 	if(list.tail == NULL){
-		printf("did not add a new node to the front of an empty list correctly, tail = NULL");
+		printf("did not add a new node to the front of an empty list correctly, tail = NULL\n");
 		return TEST_FAILED;
 	}
 	
 	size = StringList_Size(&list);
 	if(size != 1){
-		printf("did not properly return the size of a 1 element list, returned: %d", size);
+		printf("did not properly return the size of a 1 element list, returned: %d\n", size);
 		return TEST_FAILED;
 	}
 	
 	StringListNode* temp = list.head;
 	if(temp->element == NULL){
-		printf("did not put the string into the new node(new_node->element = NULL).");
+		printf("did not put the string into the new node(new_node->element = NULL).\n");
 		return TEST_FAILED;
 	}
 	if(strstr(temp->element,str) == NULL){
@@ -84,14 +84,22 @@ int test1(){
 	}
 	
 	//check if tail is pointing to the first node as well
+	//this test possibly redundant and may want to just remove.
 	temp = list.tail;
 	if(strstr(temp->element,str) == NULL){
-		printf("failed to set the tail to the first element in a list containing 1 node.");
+		printf("failed to set the tail to the first element in a list containing 1 node.\n");
 		return TEST_FAILED;
 	}
 	// add more items to the list and do some more checks, check if tail is pointing to correct item
 	char *str2 = "this was the second element inserted into the list";
 	StringList_AddFront(&list,str2);
+	
+	temp = list.head;
+	if(strstr(temp->element,str2) == NULL){
+		printf("did not add a second node to the front of a list containing 1 node.\n The head of the list points to: %s\n",temp->element);
+		return TEST_FAILED;
+	}
+	
 	temp = list.tail;
 	if(strstr(temp->element,str) == NULL){
 		printf("The tail was changed when adding a second element to the front of the list, it was changed to:\n%s\n",temp->element);
@@ -99,6 +107,8 @@ int test1(){
 		return TEST_FAILED;
 	}
 	//need to make more cases for the second item added
+	
+	
 	//then need to add a bunch more nodes into the list hopefully somehow with a forloop not sure how to do the string inside the for loop though possible + works as in java?
 	return TEST_PASSED;
 }
