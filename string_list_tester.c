@@ -11,12 +11,6 @@
    B. Bird - 05/26/2016
 */
 
-/*  string_list.c
-	Seng 265 Summer 2016
-	Brandon Vickery
-	coded the test cases
-	06/11/16
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,7 +44,7 @@ int test1(){
 	
 	int size = StringList_Size(&list);
 	if(size != 0){
-		printf("Incorrectly gave back the size of an empty list, returned: %d\n", size);
+		printf("Incorrectly gave back the size of an empty list, returned: \n%d\n", size);
 		return TEST_FAILED;
 	}
 	
@@ -68,7 +62,7 @@ int test1(){
 	
 	size = StringList_Size(&list);
 	if(size != 1){
-		printf("did not properly return the size of a 1 element list, returned: %d\n", size);
+		printf("did not properly return the size of a 1 element list, returned: \n%d\n", size);
 		return TEST_FAILED;
 	}
 	
@@ -78,8 +72,8 @@ int test1(){
 		return TEST_FAILED;
 	}
 	if(strstr(temp->element,str) == NULL){
-		printf("did not properly copy the string into the new node, you copied in: %s\n",temp->element);
-		printf("the correct output is: %s\n",str);
+		printf("did not properly copy the string into the new node, you copied in: \n%s\n",temp->element);
+		printf("the correct output is: \n%s\n",str);
 		return TEST_FAILED;
 	}
 	
@@ -96,20 +90,24 @@ int test1(){
 	
 	temp = list.head;
 	if(strstr(temp->element,str2) == NULL){
-		printf("did not add a second node to the front of a list containing 1 node.\n The head of the list points to: %s\n",temp->element);
+		printf("did not add a second node to the front of a list containing 1 node.\n The head of the list points to: \n%s\n",temp->element);
 		return TEST_FAILED;
 	}
 	
 	temp = list.tail;
 	if(strstr(temp->element,str) == NULL){
 		printf("The tail was changed when adding a second element to the front of the list, it was changed to:\n%s\n",temp->element);
-		printf("It should have been: %s",str);
+		printf("It should have been: %s\n",str);
 		return TEST_FAILED;
 	}
 	//need to make more cases for the second item added
-	
-	
-	//then need to add a bunch more nodes into the list hopefully somehow with a forloop not sure how to do the string inside the for loop though possible + works as in java?
+	size = StringList_Size(&list);
+	if(size != 2){
+		printf("Did not properly return the size of a 2 item list, returned: %d\n",size);
+		return TEST_FAILED;
+	}
+
+	//can test iterating through both forwards and backwards and seeing if at any given point it gives back the proper value.
 	return TEST_PASSED;
 }
 
@@ -117,6 +115,7 @@ int test2(){
 	//Second test case: Basic functionality II
 	//Test only the StringList_Init, StringList_Size,
 	//StringList_AddFront and StringList_AddBack functions.
+	
 	return TEST_PASSED;
 }
 
@@ -164,6 +163,10 @@ int test8(){
 	//keep in mind that your test must complete within 30 seconds for the 
 	//automated system, so some types of exhaustive testing are not practical
 	//here.
+	
+	
+	//char *strings[]{}
+	//try an array of pointers to strings and then fill that array and then fill the list.
 	return TEST_PASSED;
 }
 
