@@ -106,7 +106,15 @@ int test1(){
 		printf("Did not properly return the size of a 2 item list, returned: %d\n",size);
 		return TEST_FAILED;
 	}
-
+	temp = temp->next;
+	if(temp == NULL){
+		printf("Did not assign the previous pointer from the first element added at the front of the list to the second element added to the front of the list\n that is element 1 previous = NULL but should equal element 2.");
+		return TEST_FAILED;
+	}
+	if(strstr(temp->element,str) == NULL){
+		printf("Did not \n%s\n",temp->element);
+		return TEST_FAILED;
+	}
 	//can test iterating through both forwards and backwards and seeing if at any given point it gives back the proper value.
 	return TEST_PASSED;
 }
@@ -189,7 +197,7 @@ int main(int argc, char** argv){
 	//the conversion fails).
 	int test_number = atoi(argv[1]);
 	
-	if (test_number <= 0 || test_number >= 8){
+	if (test_number <= 0 || test_number > 8){
 		show_usage();
 		return 0;
 	}
