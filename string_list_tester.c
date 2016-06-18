@@ -23,6 +23,8 @@
    and TEST_PASSED if the test is passed.
 */
 //need to ask bill if it should exit the test once a single things has been failed or if it should try to continue onto the others.
+//what does different methodology mean?
+//
 int test1(){
 	//First test case: Basic functionality I
 	//Test only the StringList_Init, StringList_Size,
@@ -30,7 +32,8 @@ int test1(){
 	//(Note that since you cannot use StringList_Destroy, this function
 	// will produce a memory leak. However, this is acceptable in a testing
 	// context).
-	
+	//1 and no element tests
+	printf("testing StringList_Init and StringList_Size...\n");
 	StringList list;
 	StringList_Init(&list);
 	if(list.head != NULL){
@@ -47,7 +50,8 @@ int test1(){
 		printf("Incorrectly gave back the size of an empty list, returned: \n%d\n", size);
 		return TEST_FAILED;
 	}
-	
+	printf("testing StringList_AddFront as well...\n");
+	printf("testing on 1 element\n");
 	char *str = "this was the first element inserted into an empty list";
 	StringList_AddFront(&list,str);
 	
@@ -84,7 +88,8 @@ int test1(){
 		printf("failed to set the tail to the first element in a list containing 1 node.\n");
 		return TEST_FAILED;
 	}
-	// add more items to the list and do some more checks, check if tail is pointing to correct item
+	// 2 element tests
+	printf("testing on 2 elements\n");
 	char *str2 = "this was the second element inserted into the list";
 	StringList_AddFront(&list,str2);
 	
@@ -100,33 +105,125 @@ int test1(){
 		printf("It should have been: %s\n",str);
 		return TEST_FAILED;
 	}
-	//need to make more cases for the second item added
 	size = StringList_Size(&list);
 	if(size != 2){
 		printf("Did not properly return the size of a 2 item list, returned: %d\n",size);
 		return TEST_FAILED;
 	}
-	temp = temp->next;
+	temp = temp->previous;
 	if(temp == NULL){
 		printf("Did not assign the previous pointer from the first element added at the front of the list to the second element added to the front of the list\n that is element 1 previous = NULL but should equal element 2.");
 		return TEST_FAILED;
 	}
-	if(strstr(temp->element,str) == NULL){
-		printf("Did not \n%s\n",temp->element);
+	if(strstr(temp->element,str2) == NULL){
+		printf("Did not assign the previous pointer from the last element in the list to the first element, it points to element: \n%s\n",temp->element);
 		return TEST_FAILED;
 	}
-	//can test iterating through both forwards and backwards and seeing if at any given point it gives back the proper value.
+	temp = list.head;
+	if(temp->next == NULL){
+		printf("Did not assign the next pointer from the first element in the list to the second, its value is NULL.\n");
+		return TEST_FAILED;
+	}
+	//3 element tests
+	printf("testing on 3 elements\n");
+	char *str3 = "this was the third element inserted into the list.";
+	StringList_AddFront(&list,str3);
+	size = StringList_Size(&list);
+	if(size != 3){
+		printf("Did not properly return the size of a 3 element list, returned: %d\n",size);
+		return TEST_FAILED;
+	}
+	
+	temp = list.head;
+	if(strstr(temp->element,str3) == NULL){
+		printf("The first element in the list does not point to the newest element in the list, it points to:\n%s\n", temp->element);
+		printf("The element should have been: \n%s\n",str3);
+		return TEST_FAILED;
+	}
+	temp = temp->next;
+	if(strstr(temp->element,str2) == NULL){
+		printf("The first element in the list added from the front does not point to the second element added, it points to:\n%s\n",temp->element);
+		printf("It should point to:\n%s\n",str2);
+		return TEST_FAILED;
+	}
+	temp = temp->next;
+	if(strstr(temp->element,str) == NULL){
+		printf("The second element in added into the front of a list of size 3 does not point to the last element it points to:\n%s\n",temp->element);
+		printf("It should point to: \n%s\n",str);
+		return TEST_FAILED;
+	}
+	
+	temp = list.tail;
+	temp = temp->previous;
+	if(strstr(temp->element,str2) == NULL){
+		printf("The last element in the list does not point back to the element to the second element added from the front\n it points to: %s\n",temp->element);
+		printf("It should point to: \n%s\n",str2);
+		return TEST_FAILED;
+	}
+	temp = temp->previous;
+	if(strstr(temp->element,str3) == NULL){
+		printf("The middle element in a 3 element list does not point back to the last element added to the front of the list \nit points to: %s\n",temp->element);
+		printf("It should point to: \n%s\n",str3);
+		return TEST_FAILED;
+	}
+
 	return TEST_PASSED;
 }
 
+//this test glassbox testing
 int test2(){
 	//Second test case: Basic functionality II
 	//Test only the StringList_Init, StringList_Size,
 	//StringList_AddFront and StringList_AddBack functions.
+	printf("testing StringList_AddBack...\n");
+	StringList list;
+	StringList_Init(&list);
+	printf("tesing on 1 element\n");
+	char *str = "First string added to the list, it was added from the back";
+	StringList_AddBack(&list,str);
+	if(list.head == NULL){
+		printf("failed to point the head to the first element added to an empty list using AddBack\n");
+		return TEST_FAILED;
+	}
+	if(list.tail == NULL){
+		printf("failed to point the tail to the first element added to an empty list using AddBack.\n");
+		return TEST_FAILED;
+	}
+	int size = StringList_Size(&list);
+	if(size != 1){
+		printf("Did not correctly give back the size of a 1 element list, returned: %d",size);
+		return TEST_FAILED;
+	}
+	printf("testing on 2 elements\n");
+	char *str2 = "Second string added to the list, it was added from the back";
+	StringList_AddBack(&list,str2);
+	size = StringList_Size(&list);
+	if(size != 2){
+		printf("Did not correctly give back the size of a 2 element list, returned: %d",size);
+		return TEST_FAILED;
+	}
+	
+	StringListNode* temp;
+	temp = list.tail;
+	if(strstr(temp->element,str2) == NULL){
+		printf("The tail does not point to the most recent element added from the back, it points to:\n%s\n",temp->element);
+		printf("It should be pointing to: %s\n",str2);
+		return TEST_FAILED;
+	}
+	if(temp->previous == NULL){
+		printf("did not set the previous pointer on last element added from the back\n");
+		return TEST_FAILED;
+	}
+	temp = temp->previous;
+	if(strstr(temp->element,str) == NULL){
+		printf("The last element added from the back previous pointer does not point back to the proper element it points to:\n%s\n",temp->element);
+		printf("It should poin to: %s\n",str);
+		return TEST_FAILED;
+	}
 	
 	return TEST_PASSED;
 }
-
+//this test blackbox testing
 int test3(){
 	//Third test case: Basic functionality III
 	//Test only the StringList_Init, StringList_Size,
@@ -148,14 +245,14 @@ int test5(){
 	//tested in previous test cases if necessary.
 	return TEST_PASSED;
 }
-
+//this test glassbox testing
 int test6(){
 	//Sixth test case: Deletion I
 	//Test the StringList_Remove and StringList_RemoveNode functions,
 	//using any of the functions tested in previous test cases if necessary.
 	return TEST_PASSED;
 }
-
+//this test blackbox testing
 int test7(){
 	//Seventh test case: Deletion II
 	//Test the StringList_Remove, StringList_RemoveNode and StringList_Destroy functions,
@@ -172,9 +269,11 @@ int test8(){
 	//automated system, so some types of exhaustive testing are not practical
 	//here.
 	
-	
+	//test adding empty strings and seeing how it handles that
 	//char *strings[]{}
 	//try an array of pointers to strings and then fill that array and then fill the list.
+	//need to use sprintf to make the strings 
+	//or can have it so that each string is of different length
 	return TEST_PASSED;
 }
 

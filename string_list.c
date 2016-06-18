@@ -8,7 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "string_list.h"
-
+// *REMEMBER TO REMOVE THIS*
+int num_mallocs = 0;
+// *REMEMBER TO REMOVE THIS*
 /* StringList_init(L)
    Initialize the provided StringList instance.
    
@@ -82,9 +84,9 @@ int StringList_Size(StringList* L){
 */ 
 StringListNode* StringList_AddFront(StringList* L, char* str){
 	StringListNode* new_node = (StringListNode*)malloc(sizeof(StringListNode));
-	new_node->element = (char*)malloc(strlen(str));
+	new_node->element = (char*)malloc((strlen(str)+1)*sizeof(char));
 	strcpy(new_node->element, str);
-	
+	num_mallocs++; //remove this
 	new_node->previous = NULL;
 	if(L->head == NULL){
 		L->tail = new_node;
@@ -117,7 +119,7 @@ StringListNode* StringList_AddFront(StringList* L, char* str){
 */ 
 StringListNode* StringList_AddBack(StringList* L, char* str){
 	StringListNode* new_node = (StringListNode*)malloc(sizeof(StringListNode));
-	new_node->element = (char*)malloc(strlen(str));
+	new_node->element = (char*)malloc((strlen(str)+1)*sizeof(char));
 	strcpy(new_node->element, str);
 	new_node->next = NULL;
 	if(L->tail == NULL){
@@ -128,6 +130,7 @@ StringListNode* StringList_AddBack(StringList* L, char* str){
 		new_node->previous = L->tail;
 	}
 	L->tail = new_node;
+	num_mallocs++; //remove this
 	return new_node;
 }
 
@@ -189,9 +192,12 @@ void StringList_RemoveNode(StringList* L, StringListNode* node){
 			L->tail = temp->previous;
 		}
 		//free the memory
-		node = NULL;
+		node->next = NULL;
+		node->previous = NULL;
 		free(temp->element);
 		free(temp);
+		num_mallocs--; //remove this
+		printf("%d",num_mallocs);
 	}
 }
 
