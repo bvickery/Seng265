@@ -8,9 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "string_list.h"
-// *REMEMBER TO REMOVE THIS*
-int num_mallocs = 0;
-// *REMEMBER TO REMOVE THIS*
+
 /* StringList_init(L)
    Initialize the provided StringList instance.
    
@@ -86,7 +84,6 @@ StringListNode* StringList_AddFront(StringList* L, char* str){
 	StringListNode* new_node = (StringListNode*)malloc(sizeof(StringListNode));
 	new_node->element = (char*)malloc((strlen(str)+1)*sizeof(char));
 	strcpy(new_node->element, str);
-	num_mallocs++; //remove this
 	new_node->previous = NULL;
 	if(L->head == NULL){
 		L->tail = new_node;
@@ -130,7 +127,6 @@ StringListNode* StringList_AddBack(StringList* L, char* str){
 		new_node->previous = L->tail;
 	}
 	L->tail = new_node;
-	num_mallocs++; //remove this
 	return new_node;
 }
 
@@ -196,8 +192,6 @@ void StringList_RemoveNode(StringList* L, StringListNode* node){
 		node->previous = NULL;
 		free(temp->element);
 		free(temp);
-		num_mallocs--; //remove this
-		printf("%d",num_mallocs);
 	}
 }
 
@@ -215,6 +209,7 @@ void StringList_RemoveNode(StringList* L, StringListNode* node){
      A pointer to the first node containing str if it was found in the list.
 	 NULL otherwise.
 */
+//when testing this one do some tests on an empty list but then remove them from tester since im unsure what exactly is meant by intialized list, or actually could ask kaitlin
 StringListNode* StringList_InList(StringList* L, char* str){
 	int i;
 	StringListNode* temp = L->head;
@@ -245,9 +240,17 @@ StringListNode* StringList_GetIndex(StringList* L, int i){
 	if(StringList_Size(L) - 1 < i){
 		return temp;
 	}
+	if(L->head == NULL){
+		return temp;
+	}
+	/*if(i == 0){
+		temp = L->head;
+		return temp;
+	}*/
 	int j;
 	temp = L->head;
-	for(j = 0;j <= i;j++){
+	//this might need to be < rather than <=
+	for(j = 0;j < i;j++){
 		temp = temp->next;
 	}
 	return temp;
